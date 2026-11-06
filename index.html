@@ -1,126 +1,651 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-CN">
 <head>
-    <meta charset="utf-8">
-    <title>炸图监管者(老桃/万岁老桃/万岁™/碗碎/WanSei) 的官网</title>
-    <style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <meta name="theme-color" content="#202020">
+  <title>炸图监管者(老桃/万岁老桃/万岁™/碗碎/WanSei) 的官网</title>
+  <style>
+    /* —— WinUI 3 / laotaoui 深色主题色(与 Theme.cs 对齐)—— */
+    :root {
+      --window-bg: #202020;
+      --widget-bg: #2B2B2B;
+      --text-bg: #3C3C3C;
+      --text-fg: #F1F1F1;
+      --secondary: #9B9B9B;
+      --bd: #616161;
+      --highlight: #0078D7;
+      --highlight-hover: #1A86DD;
+      --green: #06B025;
+      --yellow: #FFCC00;
+      --red: #FF2828;
+      --link: #4CC2FF;
+      --radius: 0;
+      --radius-sm: 0;
+      --shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+      --font: "Segoe UI", "Microsoft YaHei UI", "Microsoft YaHei", "PingFang SC",
+              "Noto Sans SC", system-ui, sans-serif;
+    }
 
-        body {
-            background-color: #faf9e6;
-        } 
-        
-    </style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font);
+      background: var(--window-bg);
+      color: var(--text-fg);
+      line-height: 1.6;
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a {
+      color: var(--link);
+      text-decoration: none;
+      border-bottom: 1px solid transparent;
+      transition: color 0.15s, border-color 0.15s;
+    }
+    a:hover {
+      color: #7AD4FF;
+      border-bottom-color: #7AD4FF;
+    }
+
+    /* —— 顶栏 —— */
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: rgba(32, 32, 32, 0.92);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--bd);
+      height: 48px;
+      display: flex;
+      align-items: center;
+      padding: 0 24px;
+      gap: 8px;
+    }
+    .topbar .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--text-fg);
+      font-weight: 600;
+      font-size: 15px;
+      border: none;
+    }
+    .topbar .brand:hover { border: none; color: var(--text-fg); }
+    .brand-mark {
+      width: 22px;
+      height: 22px;
+      border-radius: 0;
+      background: linear-gradient(135deg, var(--highlight), #00B7C3);
+      display: grid;
+      place-items: center;
+      font-size: 12px;
+      font-weight: 700;
+      color: #fff;
+      flex-shrink: 0;
+    }
+    .topbar nav {
+      margin-left: auto;
+      display: flex;
+      gap: 4px;
+      flex-wrap: wrap;
+    }
+    .topbar nav a {
+      color: var(--secondary);
+      font-size: 13px;
+      padding: 6px 12px;
+      border-radius: var(--radius-sm);
+      border: none;
+    }
+    .topbar nav a:hover {
+      color: var(--text-fg);
+      background: var(--text-bg);
+      border: none;
+    }
+
+    .wrap {
+      max-width: 920px;
+      margin: 0 auto;
+      padding: 32px 24px 64px;
+    }
+
+    /* —— Hero —— */
+    .hero {
+      padding: 36px 0 28px;
+      border-bottom: 1px solid var(--bd);
+      margin-bottom: 28px;
+    }
+    .hero-kicker {
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--highlight);
+      margin-bottom: 10px;
+      font-weight: 600;
+    }
+    .hero h1 {
+      font-size: clamp(26px, 5vw, 34px);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      line-height: 1.25;
+      margin-bottom: 8px;
+    }
+    .hero .aka {
+      color: var(--secondary);
+      font-size: 14px;
+      margin-bottom: 18px;
+    }
+    .hero .aka span {
+      display: inline-block;
+      margin-right: 6px;
+    }
+    .hero .aka span::after {
+      content: "·";
+      margin-left: 6px;
+      opacity: 0.5;
+    }
+    .hero .aka span:last-child::after { content: none; }
+    .hero p {
+      color: var(--secondary);
+      font-size: 15px;
+      max-width: 580px;
+    }
+
+    /* —— 分区 —— */
+    .section { margin-bottom: 36px; }
+    .section-head {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+    .section-head h2 {
+      font-size: 18px;
+      font-weight: 600;
+    }
+    .section-head .bar {
+      width: 3px;
+      height: 16px;
+      background: var(--highlight);
+      border-radius: 0;
+    }
+    .section-sub {
+      font-size: 12.5px;
+      color: var(--secondary);
+      margin-top: -6px;
+      margin-bottom: 14px;
+    }
+
+    /* —— 卡片 —— */
+    .card {
+      background: var(--widget-bg);
+      border: 1px solid var(--bd);
+      border-radius: var(--radius);
+      padding: 18px 20px;
+      box-shadow: var(--shadow);
+    }
+    .card + .card { margin-top: 12px; }
+
+    .card-title {
+      font-size: 15px;
+      font-weight: 600;
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .card-desc {
+      color: var(--secondary);
+      font-size: 13.5px;
+      margin-bottom: 6px;
+    }
+    .card-meta {
+      color: var(--secondary);
+      font-size: 12.5px;
+      line-height: 1.55;
+    }
+
+    /* —— 徽章 —— */
+    .badge {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 0;
+      letter-spacing: 0.02em;
+      vertical-align: middle;
+    }
+    .badge-blue {
+      background: rgba(0, 120, 215, 0.22);
+      color: #4CC2FF;
+      border: 1px solid rgba(0, 120, 215, 0.4);
+    }
+    .badge-green {
+      background: rgba(6, 176, 37, 0.18);
+      color: #4ADE80;
+      border: 1px solid rgba(6, 176, 37, 0.35);
+    }
+    .badge-yellow {
+      background: rgba(255, 204, 0, 0.15);
+      color: var(--yellow);
+      border: 1px solid rgba(255, 204, 0, 0.35);
+    }
+    .badge-muted {
+      background: var(--text-bg);
+      color: var(--secondary);
+      border: 1px solid var(--bd);
+    }
+
+    /* —— 介绍列表 —— */
+    .intro-list {
+      list-style: none;
+      display: grid;
+      gap: 8px;
+    }
+    .intro-list li {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      color: var(--secondary);
+      font-size: 14px;
+    }
+    .intro-list li::before {
+      content: "";
+      width: 6px;
+      height: 6px;
+      margin-top: 7px;
+      border-radius: 0;
+      background: var(--highlight);
+      flex-shrink: 0;
+    }
+    .intro-list li strong {
+      color: var(--text-fg);
+      font-weight: 600;
+    }
+
+    /* —— 动态 —— */
+    .status-list {
+      list-style: none;
+      display: grid;
+      gap: 10px;
+    }
+    .status-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 14px;
+    }
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 0;
+      background: var(--green);
+      box-shadow: 0 0 0 3px rgba(6, 176, 37, 0.25);
+      flex-shrink: 0;
+    }
+
+    /* —— 作品网格 —— */
+    .tools-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+    @media (min-width: 640px) {
+      .tools-grid { grid-template-columns: 1fr 1fr; }
+    }
+
+    .tool {
+      background: var(--widget-bg);
+      border: 1px solid var(--bd);
+      border-radius: var(--radius);
+      padding: 16px 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      transition: border-color 0.15s, background 0.15s;
+    }
+    .tool:hover {
+      border-color: var(--highlight);
+      background: #303030;
+    }
+    .tool h3 {
+      font-size: 15px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .tool p {
+      color: var(--secondary);
+      font-size: 13px;
+      flex: 1;
+    }
+    .tool .actions {
+      margin-top: 8px;
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .tool.span-2 { grid-column: 1 / -1; }
+
+    /* —— 按钮 —— */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12.5px;
+      font-weight: 600;
+      padding: 6px 12px;
+      border-radius: var(--radius-sm);
+      border: 1px solid transparent;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background 0.15s, border-color 0.15s, color 0.15s;
+    }
+    .btn:hover { border-bottom: 1px solid transparent; }
+    .btn-accent {
+      background: var(--highlight);
+      color: #fff;
+    }
+    .btn-accent:hover {
+      background: var(--highlight-hover);
+      color: #fff;
+    }
+    .btn-ghost {
+      background: transparent;
+      color: var(--text-fg);
+      border-color: var(--bd);
+    }
+    .btn-ghost:hover {
+      background: var(--text-bg);
+      color: var(--text-fg);
+      border-color: var(--highlight);
+    }
+
+    /* —— 其它作品子项 —— */
+    .sub-list {
+      list-style: none;
+      margin-top: 10px;
+      display: grid;
+      gap: 8px;
+    }
+    .sub-item {
+      background: var(--text-bg);
+      border: 1px solid var(--bd);
+      border-radius: var(--radius-sm);
+      padding: 10px 12px;
+    }
+    .sub-item .name {
+      font-size: 13.5px;
+      font-weight: 600;
+      margin-bottom: 2px;
+    }
+    .sub-item .hint {
+      font-size: 12.5px;
+      color: var(--secondary);
+    }
+
+    /* —— 联系 —— */
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+    }
+    @media (min-width: 560px) {
+      .contact-grid { grid-template-columns: 1fr 1fr; }
+    }
+    .contact-item {
+      background: var(--widget-bg);
+      border: 1px solid var(--bd);
+      border-radius: var(--radius);
+      padding: 14px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      transition: border-color 0.15s;
+    }
+    .contact-item:hover { border-color: var(--highlight); }
+    .contact-item .label {
+      font-size: 12px;
+      color: var(--secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+    .contact-item .value {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-fg);
+      word-break: break-all;
+    }
+    a.contact-item { border-bottom: none; color: inherit; }
+    a.contact-item:hover { color: inherit; border-bottom: none; }
+
+    footer {
+      margin-top: 48px;
+      padding-top: 20px;
+      border-top: 1px solid var(--bd);
+      color: var(--secondary);
+      font-size: 12.5px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 16px;
+      justify-content: space-between;
+    }
+    footer a { color: var(--secondary); }
+    footer a:hover { color: var(--link); }
+  </style>
 </head>
 <body>
- <h1>炸图监管者 万岁老桃 老桃 万岁™ 碗碎 的个人官网</h1>
 
+  <header class="topbar">
+    <a class="brand" href="#">
+     
+      <span>炸图监管者</span>
+    </a>
+    <nav>
+      <a href="#about">关于</a>
+      <a href="#works">程序</a>
+      <a href="#other">其它</a>
+      <a href="#contact">联系</a>
+    </nav>
+  </header>
 
-<h2>琐碎话</h2>
-<ul>你可以称呼我为「老桃」.</ul>
-<ul>这个静态页面很简陋,因为老桃不会网页,也懒得搞AI.</ul>
-<ul>各种问题都可以进群咨询.</ul>
-<ul>老桃的爱好:编程,YSM,RSR,诗词创作,政治.</ul>
-<ul>老桃的政治主张,在此不多谈论.</ul>
-<ul>老桃的学科主张:罢黜文科,独尊理科,削减体育,重视科创.</ul>
-<ul>如果有具体的内容想与老桃谈论,可以先加群然后艾特群主.</ul>
+  <main class="wrap">
 
+    <section class="hero">
+      <div class="hero-kicker">基于laotaoui</div>
+      <h1>炸图监管者</h1>
+      <p class="aka">
+        <span>老桃</span>
+        <span>万岁老桃</span>
+        <span>万岁™</span>
+        <span>碗碎</span>
+        <span>WanSei</span>
+      </p>
+      <p>你可以称呼我为「<strong style="color:var(--text-fg)">老桃</strong>」.编程,YSM,RSR,诗词,政治......各种问题都可以进群咨询.</p>
+    </section>
 
-
-<h2>万岁™工作动态</h2>
-<ul>
-    <li>坚定反犹不动摇!</li>
-    <li>坚定反对小团体势力!</li>
-</ul>
-
-<h2>程序作品</h2>
-<h3>万岁™工具系列</h3>
-<ul>
-    <li>
-        ModelBenchTools
-        <ul>
-            <li>ModelBench配套辅助工具,现在已经不会更新,因为MI社区迎来HCl剧变.</li>
+    <!-- 琐碎话 -->
+    <section class="section" id="about">
+      <div class="section-head">
+        <span class="bar"></span>
+        <h2>琐碎话</h2>
+      </div>
+      <div class="card">
+        <ul class="intro-list">
+          <li>这个静态页面很简陋,因为老桃不会网页,也懒得搞 AI.</li>
+          <li>各种问题都可以进群咨询.</li>
+          <li><strong>爱好:</strong>编程、YSM、RSR、诗词创作、政治.</li>
+          <li>政治主张在此不多谈论.</li>
+          <li><strong>学科主张:</strong>罢黜文科,独尊理科,削减体育,重视科创.</li>
+          <li>若有具体内容想与老桃谈论,可先加群再艾特群主.</li>
         </ul>
-    </li>
-    <li>
-        Minecraft多语言编辑器
-        <ul>
-            <li>Minecraft Java/基岩版语言文件快捷编辑器.</li>
-            <a href="https://github.com/zhatujianguanzhe/MCLangTool/releases/">点我转到下载页面</a>
-        </ul>
-    </li>
-    <li>
-        zipmodel
-        <ul>
-            <li>本来是为老桃的ysm模型快速生成压缩包而写的,可以当一个压缩软件,类似7-zip.</li>
-            <d>很简单的软件,想要的加入QQ群.</d>
-        </ul>
-    </li>
-    <li>
-        作业布置工具(合肥市阳光中学 & 合肥市第一中学 特供版)
-        <ul>
-            <li>Python版本(使用原版laotaoui)</li>
-            <a href="https://github.com/zhatujianguanzhe/homeworktool/releases">点我转到Python版下载页面.</a>
-            <li>C#版本(使用新版本winui3) 体积很大!有300+MB!但是不需要部署运行环境.</li>
-            
-        </ul>
-    </li>
-    <li>
-        laotaoui
-        <ul>
-            <li>Python基于tkinter的简易UI框架,windows10原版扁平风格,支持深色浅色模式.</li>
-        </ul>
-    </li>
-</ul>
+      </div>
+    </section>
 
-<h2>其它作品</h2>
-<ul>
-    <li>
-        YSM模型
-        <ul>
-            <li>
-                狗狗娘
-                <ul>
-                    <li>还没发,想要看的可以进群里.</li>
-                    <d>里面的控制器和并行动画(打哈欠除外)都是老桃自己写的,尤其是物理.</d>
-                </ul>
-            </li>
-            <d>一些ysm技术性问题进群,老桃能给的资源都会给</d>
+    <!-- 工作动态 -->
+    <section class="section">
+      <div class="section-head">
+        <span class="bar"></span>
+        <h2>万岁™ 工作动态</h2>
+      </div>
+      <div class="card">
+        <ul class="status-list">
+          <li class="status-row">
+            <span class="status-dot"></span>
+            <span>坚定反犹不动摇!</span>
+          </li>
+          <li class="status-row">
+            <span class="status-dot"></span>
+            <span>坚定反对小团体势力!</span>
+          </li>
         </ul>
-    </li>
-    <li>
-        RSR关卡
-        <ul>
-            <li>
-                森林
-                <ul>
-                    <li>想要看的可以进群里.</li>
-                </ul>
-            </li>
-            <li>
-                科技
-                <ul>
-                    <li>想要看的可以进群里.</li>
-                </ul>
-            </li>
-            <li>
-                沙漠
-                <ul>
-                    <li>想要看的可以进群里.</li>
-                </ul>
-            </li>
-       
+      </div>
+    </section>
+
+    <!-- 程序作品 -->
+    <section class="section" id="works">
+      <div class="section-head">
+        <span class="bar"></span>
+        <h2>程序作品</h2>
+      </div>
+      <p class="section-sub">万岁™ 工具系列</p>
+
+      <div class="tools-grid">
+
+        <article class="tool">
+          <h3>
+            ModelBenchTools
+            <span class="badge badge-muted">已停更</span>
+          </h3>
+          <p>ModelBench配套辅助工具.因MI社区迎来HCl剧变,现已不再更新.</p>
+        </article>
+
+        <article class="tool">
+          <h3>
+            Minecraft多语言编辑器
+            <span class="badge badge-green">可用</span>
+          </h3>
+          <p>Minecraft Java基岩双版本语言文件快捷编辑器.</p>
+          <div class="actions">
+            <a class="btn btn-accent" href="https://github.com/zhatujianguanzhe/MCLangTool/releases/" target="_blank" rel="noopener">下载</a>
+            <a class="btn btn-ghost" href="https://github.com/zhatujianguanzhe/MCLangTool" target="_blank" rel="noopener">源码</a>
+          </div>
+        </article>
+
+        <article class="tool">
+          <h3>
+            zipmodel
+            <span class="badge badge-blue">群内获取</span>
+          </h3>
+          <p>起初为YSM模型快速打包而写,也可当轻量压缩工具(类似 7-Zip).很简单,需要的加 QQ 群.</p>
+        </article>
+
+        <article class="tool">
+          <h3>
+            作业布置与展示工具
+            <span class="badge badge-green">双版本</span>
+          </h3>
+          <p>合肥市阳光中学&amp;合肥市第一中学特供版.主推功能!</p>
+          <div class="actions">
+            <a class="btn btn-accent" href="https://github.com/zhatujianguanzhe/homeworktool/releases" target="_blank" rel="noopener">Python 版下载</a>
+            <a class="btn btn-ghost" href="https://github.com/zhatujianguanzhe/homeworktool" target="_blank" rel="noopener">源码</a>
+          </div>
+        </article>
+
+        <article class="tool span-2">
+          <h3>
+            laotaoui
+            <span class="badge badge-yellow">UI 框架</span>
+          </h3>
+          <p>基于tkinter的简易UI框架,Windows10扁平风格,支持深色/浅色模式.「作业布置与展示工具」和「Minecraft多语言编辑器」都基于此.</p>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- 其它作品 -->
+    <section class="section" id="other">
+      <div class="section-head">
+        <span class="bar"></span>
+        <h2>其它作品</h2>
+      </div>
+
+      <div class="card">
+        <div class="card-title">
+          YSM 模型
+          <span class="badge badge-blue">群内预览</span>
+        </div>
+        <div class="card-desc">狗狗娘</div>
+        <p class="card-meta">
+          还没公开发布,想看的可以进群.<br>
+          控制器与并行动画(打哈欠除外)均为老桃手写,物理部分尤其如此.<br>
+          YSM技术问题进群即可,能给的资源都会给.
+        </p>
+      </div>
+
+      <div class="card">
+        <div class="card-title">
+          RSR 关卡
+          <span class="badge badge-blue">群内预览</span>
+        </div>
+        <p class="card-meta" style="margin-bottom:4px;">想看的可以进群里.</p>
+        <ul class="sub-list">
+          <li class="sub-item">
+            <div class="name">森林</div>
+            <div class="hint">关卡 · 群内获取</div>
+          </li>
+          <li class="sub-item">
+            <div class="name">科技</div>
+            <div class="hint">关卡 · 群内获取</div>
+          </li>
+          <li class="sub-item">
+            <div class="name">沙漠</div>
+            <div class="hint">关卡 · 群内获取</div>
+          </li>
         </ul>
-    </li>
-</ul>
+      </div>
+    </section>
 
-<h2>联系</h2>
-<ul>
-    <li>Github: <a href="https://github.com/zhatujianguanzhe">https://github.com/zhatujianguanzhe</a></li>
-    <li>Bilibili: <a href="https://space.bilibili.com/1342104465">https://space.bilibili.com/1342104465</a></li>
-    <li>Discord: <a href="https://discord.gg/Ukr55F2Ypc">discord.gg/Ukr55F2Ypc</a></li>
-    <li>QQ群: 865302820</li>
-</ul>
+    <!-- 联系 -->
+    <section class="section" id="contact">
+      <div class="section-head">
+        <span class="bar"></span>
+        <h2>联系</h2>
+      </div>
+      <div class="contact-grid">
+        <a class="contact-item" href="https://github.com/zhatujianguanzhe" target="_blank" rel="noopener">
+          <span class="label">GitHub</span>
+          <span class="value">github.com/zhatujianguanzhe</span>
+        </a>
+        <a class="contact-item" href="https://space.bilibili.com/1342104465" target="_blank" rel="noopener">
+          <span class="label">Bilibili</span>
+          <span class="value">space.bilibili.com/1342104465</span>
+        </a>
+        <a class="contact-item" href="https://discord.gg/Ukr55F2Ypc" target="_blank" rel="noopener">
+          <span class="label">Discord</span>
+          <span class="value">discord.gg/Ukr55F2Ypc</span>
+        </a>
+        <div class="contact-item">
+          <span class="label">QQ群</span>
+          <span class="value">865302820</span>
+        </div>
+      </div>
+    </section>
 
+    <footer>
+      <span>Copyright © 2026 炸图监管者</span>
+      <span>万岁!</span>
+    </footer>
+
+  </main>
 
 </body>
 </html>
